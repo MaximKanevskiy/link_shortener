@@ -4,7 +4,7 @@
 
 using namespace httplib;
 
-std::string generateCookie(int cookie_size)
+static std::string generate_random_string(int cookie_size)
 {
     std::string letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     std::string new_cookie = "";
@@ -25,17 +25,21 @@ using session_data = std::map<std::string, std::string>;
 std::map<std::string, session_data> sessions;
 
 httplib::Server::Handler login—heck(httplib::Server::Handler next);
-void registerHandler(const Request& req, Response& res);
 void loginHandler(const Request& req, Response& res);
 void homeHandler(const Request& req, Response& res);
+void showHandler(const Request& req, Response& res);
+void getToHandler(const Request& req, Response& res);
 void logoutHandler(const Request& req, Response& res);
 
 int main()
 {
     Server server;
     server.Get("/", login—heck(homeHandler));
+    server.Post("/", login—heck(homeHandler));
     server.Get("/login", login—heck(loginHandler));
     server.Post("/login", login—heck(loginHandler));
+    server.Get("/show-short-link", login—heck(showHandler));
+    server.Get("/get-to", getToHandler);
     server.Get("/logout", login—heck(logoutHandler));
 
     server.listen("0.0.0.0", 8080);
@@ -125,10 +129,10 @@ void loginHandler(const Request& req, Response& res)
             <body>
 		        <form method="post" action="/login" accept-charset="UTF-8">
 				    <div class="mainContainer">
-						<label for="surname"></label>
-						<input type="text" autocomplete="off" placeholder="¬‚Â‰ËÚÂ Ù‡ÏËÎË˛" name="surname" required>
+						<label for="login"></label>
+						<input type="text" autocomplete="off" placeholder="¬‚Â‰ËÚÂ ÎÓ„ËÌ" name="login" required>
 						<label for="password"></label>
-                        <input type="password" autocomplete="off" placeholder="œ‡ÓÎ¸ ‡‰ÏËÌ‡" name="password" required>
+                        <input type="password" autocomplete="off" placeholder="¬‚Â‰ËÚÂ Ô‡ÓÎ¸" name="password" required>
 						<button class="btn-new" type="submit">¬ıÓ‰</button>
 				    </div>
 		        </form>
@@ -145,11 +149,11 @@ void loginHandler(const Request& req, Response& res)
         auto login = req.has_param("login") ? req.get_param_value("login") : "";
         auto password = req.has_param("password") ? req.get_param_value("password") : "";
 
-        if (is_registered(login) && password == correct_password)
+        if (login != "" && password == correct_password)
         {
             Cookie cookie;
             cookie.name = "user_cookie";
-            cookie.value = generateCookie(16);
+            cookie.value = generate_random_string(16);
             cookie.path = "/";
             cookie.maxAge = 3600;
             cookie.httpOnly = true;
@@ -166,14 +170,86 @@ void loginHandler(const Request& req, Response& res)
     }
 }
 
+std::map<std::string, std::string> shortLinks;
+
 void homeHandler(const Request& req, Response& res)
 {
     auto cookie = Cookie::get_cookie(req, "user_cookie");
     auto& session = sessions[cookie.value];
 
-    std::string page;
+    if (req.method == "GET")
+    {
+        std::string page = u8R"#(
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Home</title>
+                    <style>
+                        .main-box {
+                            border: 1px solid;
+                            border-radius: 3px;
+                            position: absolute;
+                            top: 50 %;
+                            left: 50 %;
+                            transform: translate(-50 %, -50 %);
+                            padding: 10px;
+                        }
+                        .inp-str {
+                            border: 1px solid;
+                            border-radius: 2px;
+                        }
+                        .sbmt {
+                            border: 1px;
+                            border-radius: 3px;
+                            color: #FFF;
+                            background-color: #0000FF;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="main-box">
+                        <form action="/" method="post">
+                            <label for="long-link">
+                                <input class="inp-str" type="url" name="long-link" placeholder="Enter long URL" autocomplete="off">
+                                <button class="sbmt" type="submit">Shorten</button>
+                            </label>
+                        </form>
+                    </div>
+                </body>
+            </html>
+        )#";
+        
+        res.set_content(page, "text/html");
+    }
     
+    if (req.method == "POST")
+    {
+        auto long_link = req.has_param("long-link") ? req.get_param_value("long-link") : "";
+        auto short_link_id = generate_random_string(8);
+        shortLinks[short_link_id] = long_link;
+        res.set_redirect("/show-short-link?id=" + short_link_id);
+    }
+}
+
+void showHandler(const Request& req, Response& res)
+{
+    std::string page;
+    auto id = req.get_param_value("id");
+    page += u8"<p>26.83.106.113:8080/get-to?id=" + id;
+
     res.set_content(page, "text/html");
+}
+
+void getToHandler(const Request& req, Response& res)
+{
+    if (req.method == "GET")
+    {
+        std::string id = req.get_param_value("id");
+        std::string link = shortLinks[id];
+        std::cout << link << std::endl;
+        res.set_redirect(link.c_str());
+    }
 }
 
 void logoutHandler(const Request& req, Response& res)
@@ -195,9 +271,4 @@ void logoutHandler(const Request& req, Response& res)
 
         res.set_redirect("/login");
     }
-}
-
-void registerHandler(const Request& req, Response& res)
-{
-
 }
