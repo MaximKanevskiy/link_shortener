@@ -24,7 +24,7 @@ static std::string generate_random_string(int cookie_size)
 using session_data = std::map<std::string, std::string>;
 std::map<std::string, session_data> sessions;
 
-httplib::Server::Handler login—heck(httplib::Server::Handler next);
+httplib::Server::Handler loginCheck(httplib::Server::Handler next);
 void loginHandler(const Request& req, Response& res);
 void homeHandler(const Request& req, Response& res);
 void showHandler(const Request& req, Response& res);
@@ -34,13 +34,13 @@ void logoutHandler(const Request& req, Response& res);
 int main()
 {
     Server server;
-    server.Get("/", login—heck(homeHandler));
-    server.Post("/", login—heck(homeHandler));
-    server.Get("/login", login—heck(loginHandler));
-    server.Post("/login", login—heck(loginHandler));
-    server.Get("/show-short-link", login—heck(showHandler));
+    server.Get("/", loginCheck(homeHandler));
+    server.Post("/", loginCheck(homeHandler));
+    server.Get("/login", loginCheck(loginHandler));
+    server.Post("/login", loginCheck(loginHandler));
+    server.Get("/show-short-link", loginCheck(showHandler));
     server.Get("/get-to", getToHandler);
-    server.Get("/logout", login—heck(logoutHandler));
+    server.Get("/logout", loginCheck(logoutHandler));
 
     server.listen("0.0.0.0", 8080);
 }
@@ -56,7 +56,7 @@ static bool is_session_exist(const Request& req)
     return true;
 }
 
-httplib::Server::Handler login—heck(httplib::Server::Handler next)
+httplib::Server::Handler loginCheck(httplib::Server::Handler next)
 {
     return [next](const Request& req, Response& res)
         {
@@ -84,9 +84,9 @@ void loginHandler(const Request& req, Response& res)
             <!DOCTYPE html>
             <html>
             <head>
-		        <meta charset="UTF-8">
-		        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-		        <title>Login page</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Login page</title>
                 <style>
                     body {
                         background-color: #f0f0f0;
@@ -127,17 +127,18 @@ void loginHandler(const Request& req, Response& res)
                 </style>
             </head>
             <body>
-		        <form method="post" action="/login" accept-charset="UTF-8">
-				    <div class="mainContainer">
-						<label for="login"></label>
-						<input type="text" autocomplete="off" placeholder="¬‚Â‰ËÚÂ ÎÓ„ËÌ" name="login" required>
-						<label for="password"></label>
-                        <input type="password" autocomplete="off" placeholder="¬‚Â‰ËÚÂ Ô‡ÓÎ¸" name="password" required>
-						<button class="btn-new" type="submit">¬ıÓ‰</button>
-				    </div>
-		        </form>
+		<form method="post" action="/login" accept-charset="UTF-8">
+		    <div class="mainContainer">
+			<label for="login"></label>
+			<input type="text" autocomplete="off" placeholder="√Ç√¢√•√§√®√≤√• √´√Æ√£√®√≠" name="login" required>
+			<label for="password"></label>
+			<input type="password" autocomplete="off" placeholder="√Ç√¢√•√§√®√≤√• √Ø√†√∞√Æ√´√º" name="password" required>
+			<button class="btn-new" type="submit">√Ç√µ√Æ√§</button>
+		    </div>
+		</form>
             </body>
-            </html>)#";
+            </html>
+    	)#";
 
         res.set_content(page, "text/html");
     }
