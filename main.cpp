@@ -24,7 +24,7 @@ static std::string generate_random_string(int cookie_size)
 using session_data = std::map<std::string, std::string>;
 std::map<std::string, session_data> sessions;
 
-httplib::Server::Handler login—heck(httplib::Server::Handler next);
+httplib::Server::Handler login–°heck(httplib::Server::Handler next);
 void loginHandler(const Request& req, Response& res);
 void registerHandler(const Request& req, Response& res);
 void homeHandler(const Request& req, Response& res);
@@ -35,15 +35,15 @@ void logoutHandler(const Request& req, Response& res);
 int main()
 {
     Server server;
-    server.Get("/", login—heck(homeHandler));
-    server.Post("/", login—heck(homeHandler));
-    server.Get("/login", login—heck(loginHandler));
-    server.Post("/login", login—heck(loginHandler));
+    server.Get("/", login–°heck(homeHandler));
+    server.Post("/", login–°heck(homeHandler));
+    server.Get("/login", login–°heck(loginHandler));
+    server.Post("/login", login–°heck(loginHandler));
     server.Get("/register", registerHandler);
     server.Post("/register", registerHandler);
-    server.Get("/show-short-link", login—heck(showHandler));
+    server.Get("/show-short-link", login–°heck(showHandler));
     server.Get("/get-to", getToHandler);
-    server.Get("/logout", login—heck(logoutHandler));
+    server.Get("/logout", login–°heck(logoutHandler));
 
     server.listen("0.0.0.0", 8080);
 }
@@ -59,7 +59,7 @@ static bool is_session_exist(const Request& req)
     return true;
 }
 
-httplib::Server::Handler login—heck(httplib::Server::Handler next)
+httplib::Server::Handler login–°heck(httplib::Server::Handler next)
 {
     return [next](const Request& req, Response& res)
     {
@@ -137,12 +137,12 @@ void registerHandler(const Request& req, Response& res)
                 <div class="register-panel">
                     <form action="/register" method="post">
                         <label for="login"></label>
-                        <input type="text" placeholder="—ÓÁ‰‡ÈÚÂ ÎÓ„ËÌ ËÎË ‚‚Â‰ËÚÂ ‡‰ÂÒ ÔÓ˜Ú˚" name="login" autocomplete="off" required><br>
+                        <input type="text" placeholder="–°–æ–∑–¥–∞–π—Ç–µ –ª–æ–≥–∏–Ω –∏–ª–∏ –≤–≤–µ–¥–∏—Ç–µ –∞–¥—Ä–µ—Å –ø–æ—á—Ç—ã" name="login" autocomplete="off" required><br>
                         <label for="password"></label>
-                        <input type="password" placeholder="œË‰ÛÏ‡ÈÚÂ Ô‡ÓÎ¸" autocomplete="off" name="password" required><br>
+                        <input type="password" placeholder="–ü—Ä–∏–¥—É–º–∞–π—Ç–µ –ø–∞—Ä–æ–ª—å" autocomplete="off" name="password" required><br>
                         <label for="confirmed_password"></label>
-                        <input type="password" placeholder="œÓ‰Ú‚Â‰ËÚÂ Ô‡ÓÎ¸" autocomplete="off" name="confirmed_password" required><br>
-                        <button class="btn-new" type="submit">ƒ‡ÎÂÂ</button>
+                        <input type="password" placeholder="–ü–æ–¥—Ç–≤–µ—Ä–¥–∏—Ç–µ –ø–∞—Ä–æ–ª—å" autocomplete="off" name="confirmed_password" required><br>
+                        <button class="btn-new" type="submit">–î–∞–ª–µ–µ</button>
                     </form>
                 </div>
             </body>
@@ -175,9 +175,9 @@ void loginHandler(const Request& req, Response& res)
             <!DOCTYPE html>
             <html>
             <head>
-		        <meta charset="UTF-8">
-		        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-		        <title>Login page</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Login page</title>
                 <style>
                     body {
                         background-color: #f0f0f0;
@@ -226,19 +226,19 @@ void loginHandler(const Request& req, Response& res)
                 </style>
             </head>
             <body>
-		        <form method="post" action="/login" accept-charset="UTF-8">
-				    <div class="mainContainer">
-			            <label for="login"></label>
-			            <input type="text" autocomplete="off" placeholder="¬‚Â‰ËÚÂ ÎÓ„ËÌ" name="login">
-			            <label for="password"></label>
-                        <input type="password" autocomplete="off" placeholder="¬‚Â‰ËÚÂ Ô‡ÓÎ¸" name="password">
-			            <button class="btn-new" type="submit">¬ıÓ‰</button>
-	                </div>
-		        </form>
+		<form method="post" action="/login" accept-charset="UTF-8">
+		    <div class="mainContainer">
+		    	<label for="login"></label>
+		    	<input type="text" autocomplete="off" placeholder="–í–≤–µ–¥–∏—Ç–µ –ª–æ–≥–∏–Ω" name="login">
+		    	<label for="password"></label>
+		    	<input type="password" autocomplete="off" placeholder="–í–≤–µ–¥–∏—Ç–µ –ø–∞—Ä–æ–ª—å" name="password">
+		        <button class="btn-new" type="submit">–í—Ö–æ–¥</button>
+		    </div>
+		</form>
                 <div class="/register-div">
-                    <p>ÕÂÚ ‡ÍÍ‡ÛÌÚ‡? —ÓÁ‰‡È!</p>
+                    <p>–ù–µ—Ç –∞–∫–∫–∞—É–Ω—Ç–∞? –°–æ–∑–¥–∞–π!</p>
                     <form action="/register" method="get">
-                        <button class="btn-new" type="submit">—ÓÁ‰‡Ú¸</button>
+                        <button class="btn-new" type="submit">–°–æ–∑–¥–∞—Ç—å</button>
                     </form>
                 </div>
             </body>
@@ -335,17 +335,17 @@ void homeHandler(const Request& req, Response& res)
             <body>
                 <div class="upper-panel">
                     <form action="/get-history" method="get">
-                        <button class="panel-btn" type="submit">»ÒÚÓËˇ</button>
+                        <button class="panel-btn" type="submit">–ò—Å—Ç–æ—Ä–∏—è</button>
                     </form>
                     <form action="/logout" method="get">
-                        <button class="panel-btn" type="submit">¬˚ıÓ‰</button>
+                        <button class="panel-btn" type="submit">–í—ã—Ö–æ–¥</button>
                     </form>
                 </div>
                 <div class="main-box">
                     <form action="/" method="post">    
                         <label for="long-link">
-                            <input class="inp-str" type="url" name="long-link" placeholder="¬‚Â‰ËÚÂ ‰ÎËÌÌÛ˛ ÒÒ˚ÎÍÛ" autocomplete="off">
-                            <button class="sbmt" type="submit">—ÓÍ‡ÚËÚ¸</button>
+                            <input class="inp-str" type="url" name="long-link" placeholder="–í–≤–µ–¥–∏—Ç–µ –¥–ª–∏–Ω–Ω—É—é —Å—Å—ã–ª–∫—É" autocomplete="off">
+                            <button class="sbmt" type="submit">–°–æ–∫—Ä–∞—Ç–∏—Ç—å</button>
                         </label>
                     </form>
                 </div>
